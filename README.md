@@ -16,6 +16,9 @@ It also provides a poll method that will poll the first pollable Stackable on th
 * Network
 Simple implementations of socket and packet assembly, in the form of StackableSocket and StackablePacketAssembler
 
+* Cryptography
+Simple stream cipher (ARC4). I might add more here.
+
 * Utilities
 Simple implementations of simple utilities, such as StackablePickler, StackableJSON and StackablePrinter
 
