@@ -2,6 +2,8 @@
 # Stackables
 #
 
+from __future__ import print_function, absolute_import, unicode_literals, division
+
 class StackableError(Exception):
 	'Indicates an error in the Stackable'
 	def __init__(self, value):

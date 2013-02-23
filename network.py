@@ -2,7 +2,8 @@
 # Network Stackables
 #
 
-from stackable import Stackable, BufferedStackable, StackableError
+from __future__ import print_function, absolute_import, unicode_literals, division
+from stackable.stackable import Stackable, BufferedStackable, StackableError
 from socket import socket, AF_INET, SOCK_STREAM
 from struct import pack, unpack
 

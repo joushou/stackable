@@ -2,7 +2,8 @@
 # Cryptographic Stackables
 #
 
-from stackable import Stackable
+from __future__ import print_function, absolute_import, unicode_literals, division
+from stackable.stackable import Stackable
 
 class StackableARC4(Stackable):
 	def __init__(self, key='Key', state_size = 256):

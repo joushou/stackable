@@ -2,8 +2,8 @@
 # Utility stackables
 #
 
-from __future__ import print_function
-from stackable import Stackable
+from __future__ import print_function, absolute_import, unicode_literals, division
+from stackable.stackable import Stackable
 import json, pickle
 
 class StackablePickler(Stackable):

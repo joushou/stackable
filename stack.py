@@ -2,8 +2,8 @@
 # Stack - The Stackable container
 #
 
-from __future__ import print_function
-from stackable import Stackable
+from __future__ import print_function, absolute_import, unicode_literals, division
+from stackable.stackable import Stackable
 from io import IOBase
 
 class StackError(Exception):
