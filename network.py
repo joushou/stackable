@@ -27,6 +27,7 @@ class StackableSocket(Stackable):
 
 	def process_output(self, data):
 		self.socket.sendall(data)
+		return data
 
 	def poll(self):
 		a = self.socket.recv(10240)
@@ -38,7 +39,7 @@ class StackableSocket(Stackable):
 class StackablePacketAssembler(BufferedStackable):
 	'''Stackable packet layer - Provides both assembly and disassembly of packets.
 	Uses length-header to determine length of payload, and supports a 4-byte header magic.'''
-	def __init__(self, magics=[[1,3,3,7]]):
+	def __init__(self, magics=[(1,3,3,7)]):
 		super(StackablePacketAssembler, self).__init__()
 		self.magics = magics
 		self.buf = b''
