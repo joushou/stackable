@@ -97,11 +97,11 @@ class StackablePacketAssembler(BufferedStackable):
 				return z
 
 	def process_output(self, data):
-		packedMsg  = pack(('!%ds' % len(data)), data)
-		packedHdr1 = pack('!4B', self.sndhdr[0],
+		packedMsg  = pack((str('!%ds') % len(data)), data)
+		packedHdr1 = pack(str('!4B'), self.sndhdr[0],
 		                  		 self.sndhdr[1],
 		                  		 self.sndhdr[2],
 		                  		 self.sndhdr[3])
-		packedHdr2 = pack('!I', len(packedMsg))
+		packedHdr2 = pack(str('!I'), len(packedMsg))
 		return packedHdr1 + packedHdr2 + packedMsg
 
