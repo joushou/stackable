@@ -67,7 +67,7 @@ class StackablePacketAssembler(BufferedStackable):
 		while self.bleft <= 0:
 			if self.state == 0:
 				# Header
-				self.hdr = unpack('!4B', self.buf[0:4])
+				self.hdr = unpack(str('!4B'), self.buf[0:4])
 				if self.hdr not in self.magics:
 					# If the header is incorrect,
 					#  stuff all but the first byte back and retry
@@ -82,14 +82,14 @@ class StackablePacketAssembler(BufferedStackable):
 				self.state += 1
 			elif self.state == 1:
 				# Size marker
-				self.len = unpack('!I', self.buf[0:4])[0]
+				self.len = unpack(str('!I'), self.buf[0:4])[0]
 
 				self.buf = self.buf[4:]
 				self.bleft += self.len
 				self.state += 1
 			elif self.state == 2:
 				# Payload
-				z = unpack(('!%ds' % self.len), self.buf[0:self.len])[0]
+				z = unpack((str('!%ds') % self.len), self.buf[0:self.len])[0]
 
 				self.buf = self.buf[self.len:]
 				self.bleft += 4
