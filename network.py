@@ -26,11 +26,17 @@ class StackableSocket(Stackable):
 		return data
 
 	def process_output(self, data):
-		self.socket.sendall(data)
+		try:
+			self.socket.sendall(data)
+		except:
+			raise StackableError('Error occured while writing to socket')
 		return data
 
 	def poll(self):
-		a = self.socket.recv(10240)
+		try:
+			a = self.socket.recv(10240)
+		except:
+			raise StackableError('Error occured while reading from socket')
 		if a == b'':
 			raise StackableError('Connection closed')
 		else:
