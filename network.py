@@ -73,7 +73,6 @@ class StackablePacketAssembler(BufferedStackable):
 					self.buf = self.buf[1:]
 					self.bleft += 4
 					self.dropped += 1
-					self.reset()
 					continue
 
 				self.buf = self.buf[4:]
