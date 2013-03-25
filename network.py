@@ -19,9 +19,6 @@ class StackableSocket(Stackable):
 		if None not in (ip, port):
 			self.socket.connect((ip, port))
 
-	def __del__(self):
-		self.socket.close()
-
 	def process_input(self, data):
 		return data
 
@@ -49,16 +46,12 @@ class StackablePacketAssembler(BufferedStackable):
 		super(StackablePacketAssembler, self).__init__()
 		self.magics = magics
 		self.buf = b''
-		self.bleft = 4
-		self.dropped = 0
-		self.reset()
-
-	def reset(self):
-		'Reset state'
-		self.len = 0
-		self.hdr = []
 		self.state = 0
-		self.sndhdr = self.magics[0]
+		self.bleft = 4
+		self.len = 0
+		self.dropped = 0
+		self.hdr = []
+		self.sndhdr = magics[0]
 
 	def input_ready(self, data):
 		'Check if the we\'ve received the expected amount'
@@ -99,7 +92,7 @@ class StackablePacketAssembler(BufferedStackable):
 
 				self.buf = self.buf[self.len:]
 				self.bleft += 4
-				self.reset()
+				self.state = 0
 				return z
 
 	def process_output(self, data):
