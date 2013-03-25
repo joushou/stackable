@@ -68,12 +68,13 @@ class StackablePacketAssembler(BufferedStackable):
 				# Header
 				self.hdr = unpack(str('!4B'), self.buf[0:4])
 				if self.hdr not in self.magics:
-					# If the header is incorrect,
-					#  stuff all but the first byte back and retry
-					self.buf = self.buf[1:]
-					self.bleft += 4
-					self.dropped += 1
-					continue
+					if (None, None, None, None) not in self.magics:
+						# If the header is incorrect,
+						#  stuff all but the first byte back and retry
+						self.buf = self.buf[1:]
+						self.bleft += 4
+						self.dropped += 1
+						continue
 
 				self.buf = self.buf[4:]
 				self.bleft += 4
