@@ -42,8 +42,9 @@ class StackableSocket(Stackable):
 class StackablePacketAssembler(BufferedStackable):
 	'''Stackable packet layer - Provides both assembly and disassembly of packets.
 	Uses length-header to determine length of payload, and supports a 4-byte header magic.'''
-	def __init__(self, magics=[(1,3,3,7)]):
+	def __init__(self, magics=[(1,3,3,7)], acceptAllMagic=False):
 		super(StackablePacketAssembler, self).__init__()
+		self.acceptAllMagic = acceptAllMagic
 		self.magics = magics
 		self.buf = b''
 		self.state = 0
@@ -67,14 +68,13 @@ class StackablePacketAssembler(BufferedStackable):
 			if self.state == 0:
 				# Header
 				self.hdr = unpack(str('!4B'), self.buf[0:4])
-				if self.hdr not in self.magics:
-					if (None, None, None, None) not in self.magics:
-						# If the header is incorrect,
-						#  stuff all but the first byte back and retry
-						self.buf = self.buf[1:]
-						self.bleft += 4
-						self.dropped += 1
-						continue
+				if self.hdr not in self.magics and not self.acceptAllMagic:
+					# If the header is incorrect,
+					#  stuff all but the first byte back and retry
+					self.buf = self.buf[1:]
+					self.bleft += 4
+					self.dropped += 1
+					continue
 
 				self.buf = self.buf[4:]
 				self.bleft += 4
