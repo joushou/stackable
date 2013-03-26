@@ -4,8 +4,9 @@
 
 from __future__ import print_function, absolute_import, unicode_literals, division
 from stackable.stackable import Stackable, BufferedStackable, StackableError
-from socket import socket, AF_INET, SOCK_STREAM
+from socket import socket, error, AF_INET, SOCK_STREAM
 from struct import pack, unpack
+from errno import EAGAIN
 
 class StackableSocket(Stackable):
 	'Stackable socket wrapper'
@@ -27,7 +28,13 @@ class StackableSocket(Stackable):
 
 	def process_output(self, data):
 		try:
-			self.socket.sendall(data)
+			n = len(data)
+			while n > 0:
+				try:
+					n -= self.socket.send(data)
+				except error, e:
+					if e != EAGAIN:
+						raise
 		except:
 			raise StackableError('Error occured while writing to socket')
 		return data
