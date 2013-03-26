@@ -11,13 +11,16 @@ class StackableSocket(Stackable):
 	'Stackable socket wrapper'
 	def __init__(self, sock=None, ip=None, port=None):
 		super(Stackable, self).__init__()
-		if sock != None:
-			self.socket = sock
-		else:
-			self.socket = socket(AF_INET, SOCK_STREAM)
-		self.socket.settimeout(None)
-		if None not in (ip, port):
-			self.socket.connect((ip, port))
+		try:
+			if sock != None:
+				self.socket = sock
+			else:
+				self.socket = socket(AF_INET, SOCK_STREAM)
+			self.socket.settimeout(None)
+			if None not in (ip, port):
+				self.socket.connect((ip, port))
+		except:
+			raise StackableError('Error occured while connecting socket')
 
 	def process_input(self, data):
 		return data
