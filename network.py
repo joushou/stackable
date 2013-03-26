@@ -28,10 +28,10 @@ class StackableSocket(Stackable):
 
 	def process_output(self, data):
 		try:
-			n = len(data)
-			while n > 0:
+			while data:
 				try:
-					n -= self.socket.send(data)
+					n = self.socket.send(data)
+					data = data[n:]
 				except error, e:
 					if e != EAGAIN:
 						raise
