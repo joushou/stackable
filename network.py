@@ -20,8 +20,8 @@ class StackableSocket(Stackable):
 			self.socket.settimeout(None)
 			if None not in (ip, port):
 				self.socket.connect((ip, port))
-		except:
-			raise StackableError('Error occured while connecting socket')
+		except error,e:
+			raise StackableError('Error occured while connecting socket: %s' % str(e))
 
 	def process_input(self, data):
 		return data
@@ -35,15 +35,15 @@ class StackableSocket(Stackable):
 				except error, e:
 					if e != EAGAIN:
 						raise
-		except:
-			raise StackableError('Error occured while writing to socket')
+		except error,e:
+			raise StackableError('Error occured while writing to socket: %s' % str(e))
 		return data
 
 	def poll(self):
 		try:
 			a = self.socket.recv(10240)
-		except:
-			raise StackableError('Error occured while reading from socket')
+		except error,e:
+			raise StackableError('Error occured while reading from socket: %s' % str(e))
 		if a == b'':
 			raise StackableError('Connection closed')
 		else:
