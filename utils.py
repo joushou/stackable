@@ -62,7 +62,7 @@ class StackablePoker(Stackable):
 		self.timestamp = datetime.now()
 		def ping():
 			sleep(20)
-			self._feed('__stack_ping')
+			self._feed(('__stack_ping').encode('utf-8'))
 		Thread(target=ping).start()
 
 	def process_output(self, data):
@@ -75,7 +75,7 @@ class StackablePoker(Stackable):
 			self.reset()
 			return None
 		elif data == '__stack_ping':
-			self._feed('__stack_pong')
+			self._feed(('__stack_pong').encode('utf-8'))
 			return None
 		elif (datetime.now() - self.timestamp) > timedelta(seconds=30):
 			raise StackableError('Pong not received')
