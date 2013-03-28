@@ -71,7 +71,9 @@ class StackablePoker(Stackable):
 				del self.w
 				return
 			self._feed(('__stack_ping').encode('utf-8'))
-		Thread(target=ping).start()
+		x = Thread(target=ping)
+		x.daemon = True
+		x.start()
 
 	def process_output(self, data):
 		if (datetime.now() - self.timestamp) > timedelta(seconds=30):
