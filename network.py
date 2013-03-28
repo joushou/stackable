@@ -89,7 +89,7 @@ class StackablePacketAssembler(BufferedStackable):
 					# If the header is incorrect,
 					#  stuff all but the first byte back and retry
 					self.buf = self.buf[1:]
-					self.bleft += 4
+					self.bleft += 1
 					self.dropped += 1
 					continue
 
