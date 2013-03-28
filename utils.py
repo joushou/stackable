@@ -60,6 +60,7 @@ class StackablePoker(Stackable):
 		self.pong_string = pong_string.encode('utf-8')
 		self.w = Event()
 		self.interval = interval
+		self.send = send
 		if self.send:
 			self.reset()
 
