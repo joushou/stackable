@@ -10,15 +10,15 @@ from errno import EAGAIN
 
 class StackableSocket(Stackable):
 	'Stackable socket wrapper'
-	def __init__(self, sock=None, ip=None, port=None):
+	def __init__(self, sock=None, ip=None, port=None, timeout=None):
 		super(StackableSocket, self).__init__()
 		try:
 			if sock != None:
 				self.socket = sock
 			else:
 				self.socket = socket(AF_INET, SOCK_STREAM)
-				self.socket.settimeout(10)
-			self.socket.settimeout(None)
+
+			self.socket.settimeout(timeout)
 			if None not in (ip, port):
 				self.socket.connect((ip, port))
 		except error,e:
