@@ -11,7 +11,7 @@ from errno import EAGAIN
 class StackableSocket(Stackable):
 	'Stackable socket wrapper'
 	def __init__(self, sock=None, ip=None, port=None):
-		super(Stackable, self).__init__()
+		super(StackableSocket, self).__init__()
 		try:
 			if sock != None:
 				self.socket = sock
@@ -22,6 +22,11 @@ class StackableSocket(Stackable):
 				self.socket.connect((ip, port))
 		except error,e:
 			raise StackableError('Error occured while connecting socket: %s' % str(e))
+
+	def _detach(self):
+		super(StackableSocket, self)._detach()
+		self.socket.close()
+		del self.socket
 
 	def process_input(self, data):
 		return data
