@@ -6,7 +6,7 @@ from __future__ import print_function, absolute_import, unicode_literals, divisi
 from stackable.stackable import Stackable, StackableError
 import json, pickle
 from time import sleep
-from threading import Thread
+from threading import Thread, Event
 from datetime import datetime, timedelta
 
 class StackablePickler(Stackable):
@@ -57,11 +57,19 @@ class StackablePoker(Stackable):
 	def __init__(self):
 		super(StackablePoker, self).__init__()
 		self.reset()
+		self.w = Event()
+
+	def _detach(self):
+		super(StackablePoker, self)._detach()
+		self.w.set()
 
 	def reset(self):
 		self.timestamp = datetime.now()
 		def ping():
-			sleep(20)
+			self.w.wait(20)
+			if self.w.isSet():
+				del self.w
+				return
 			self._feed(('__stack_ping').encode('utf-8'))
 		Thread(target=ping).start()
 
