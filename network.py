@@ -82,7 +82,8 @@ class StackablePacketAssembler(BufferedStackable):
 		while self.bleft <= 0:
 			if self.state == 0:
 				# Header
-				self.hdr = unpack(str('!4B'), self.buf[0:4])
+				x = self.buf[0:4]
+				self.hdr = unpack(b'!4B', self.buf[0:4])
 				if self.hdr not in self.magics and not self.acceptAllMagic:
 					# If the header is incorrect,
 					#  stuff all but the first byte back and retry
@@ -96,26 +97,30 @@ class StackablePacketAssembler(BufferedStackable):
 				self.state += 1
 			elif self.state == 1:
 				# Size marker
-				self.len = unpack(str('!I'), self.buf[0:4])[0]
+				self.len = unpack(b'!I', self.buf[0:4])[0]
 
 				self.buf = self.buf[4:]
 				self.bleft += self.len
 				self.state += 1
 			elif self.state == 2:
 				# Payload
-				z = unpack((str('!%ds' % self.len)), self.buf[0:self.len])[0]
+				z = unpack(b'!%ds' % self.len, self.buf[0:self.len])[0]
 
 				self.buf = self.buf[self.len:]
 				self.bleft += 4
 				self.state = 0
 				return z
 
+	def poll(self):
+		if self.bleft <= 0:
+			return self.process_input(b'')
+
 	def process_output(self, data):
-		packedMsg  = pack((str('!%ds' % len(data))), data)
-		packedHdr1 = pack(str('!4B'), self.sndhdr[0],
+		packedMsg  = pack(b'!%ds' % len(data), data)
+		packedHdr1 = pack(b'!4B', self.sndhdr[0],
 		                  		 self.sndhdr[1],
 		                  		 self.sndhdr[2],
 		                  		 self.sndhdr[3])
-		packedHdr2 = pack(str('!I'), len(packedMsg))
+		packedHdr2 = pack(b'!I', len(packedMsg))
 		return packedHdr1 + packedHdr2 + packedMsg
 
