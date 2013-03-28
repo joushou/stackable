@@ -53,6 +53,25 @@ class StackablePrinter(Stackable):
 		self.printer(data)
 		return data
 
+from collections import deque
+class StackableInjector(Stackable):
+	def __init__(self):
+		super(StackableInjector, self).__init__()
+		self.in_buf = deque()
+		self.out_buf = deque()
+
+	def push(self, data):
+		self.in_buf.append(data)
+
+	def poll(self):
+		if len(self.in_buf):
+			return self.in_buf.popleft()
+		return None
+
+	def process_output(self, data):
+		self.out_buf.append(data)
+		return data
+
 class StackablePoker(Stackable):
 	def __init__(self, interval=20, send=True, ping_string='__stack_ping', pong_string='__stack_pong'):
 		super(StackablePoker, self).__init__()
