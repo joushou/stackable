@@ -47,7 +47,7 @@ If no index is provided, it will be put at the end of the stack.'''
 
 		self.stack.insert(index, stobj)
 		self.stacklen = len(self.stack)
-		stobj._attach(self._feed)
+		stobj._attach(lambda x: self._feed(stobj, x))
 
 	def detach(self, stobj):
 		'Detach a stackable.'
