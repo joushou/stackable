@@ -3,7 +3,7 @@
 #
 
 from __future__ import print_function, absolute_import, unicode_literals, division
-from stackable.stackable import Stackable
+from stackable.stackable import Stackable, StackableError
 import json, pickle
 from time import sleep
 from threading import Thread
