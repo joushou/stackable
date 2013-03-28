@@ -34,7 +34,7 @@ continue propagation through the containing Stack.'''
 		return self.process_output(data)
 
 	def _attach(self, feed):
-		self._feed = feed
+		self._feed = lambda x: feed(self, x)
 
 	def _detach(self):
 		del self._feed
