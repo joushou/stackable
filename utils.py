@@ -71,10 +71,13 @@ class StackablePoker(Stackable):
 	def reset(self):
 		self.timestamp = datetime.now()
 		def ping():
+			print("[POKER] Waiting %d secs before pinging" % self.interval)
 			self.w.wait(self.interval)
 			try:
 				self._feed(self.ping_string)
+				print("[POKER] Sent ping")
 			except:
+				print("[POKER] Couldn't send ping")
 				pass
 		x = Thread(target=ping)
 		x.daemon = True
@@ -87,9 +90,11 @@ class StackablePoker(Stackable):
 
 	def process_input(self, data):
 		if data == self.pong_string:
+			print("[POKER] Received pong")
 			self.reset()
 			return None
 		elif data == self.ping_string:
+			print("[POKER] Received ping & sending pong")
 			self._feed(self.pong_string)
 			return None
 		elif self.send and (datetime.now() - self.timestamp) > timedelta(seconds=30):
