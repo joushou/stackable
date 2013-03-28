@@ -55,7 +55,7 @@ class StackablePrinter(Stackable):
 
 class StackablePoker(Stackable):
 	def __init__(self):
-		super(StackablePingPongPoker, self).__init__()
+		super(StackablePoker, self).__init__()
 		self.reset()
 
 	def reset(self):
