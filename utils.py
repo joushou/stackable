@@ -56,8 +56,8 @@ class StackablePrinter(Stackable):
 class StackablePoker(Stackable):
 	def __init__(self):
 		super(StackablePoker, self).__init__()
-		self.reset()
 		self.w = Event()
+		self.reset()
 
 	def _detach(self):
 		super(StackablePoker, self)._detach()
