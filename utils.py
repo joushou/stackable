@@ -5,6 +5,9 @@
 from __future__ import print_function, absolute_import, unicode_literals, division
 from stackable.stackable import Stackable
 import json, pickle
+from time import sleep
+from threading import Thread
+from datetime import datetime, timedelta
 
 class StackablePickler(Stackable):
 	'Pickle codec'
@@ -48,4 +51,32 @@ class StackablePrinter(Stackable):
 
 	def process_output(self, data):
 		self.printer(data)
+		return data
+
+class StackablePoker(Stackable):
+	def __init__(self):
+		super(StackablePingPongPoker, self).__init__()
+		self.reset()
+
+	def reset(self):
+		self.timestamp = datetime.now()
+		def ping():
+			sleep(20)
+			self._feed('__stack_ping')
+		Thread(target=ping).start()
+
+	def process_output(self, data):
+		if (datetime.now() - self.timestamp) > timedelta(seconds=30):
+			raise StackableError('Pong not received')
+		return data
+
+	def process_input(self, data):
+		if data == '__stack_pong':
+			self.reset()
+			return None
+		elif data == '__stack_ping':
+			self._feed('__stack_pong')
+			return None
+		elif (datetime.now() - self.timestamp) > timedelta(seconds=30):
+			raise StackableError('Pong not received')
 		return data
