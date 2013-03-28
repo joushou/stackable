@@ -98,7 +98,7 @@ class StackablePacketAssembler(BufferedStackable):
 				self.state += 1
 			elif self.state == 2:
 				# Payload
-				z = unpack((str('!%ds') % self.len), self.buf[0:self.len])[0]
+				z = unpack((str('!%ds' % self.len)), self.buf[0:self.len])[0]
 
 				self.buf = self.buf[self.len:]
 				self.bleft += 4
@@ -106,7 +106,7 @@ class StackablePacketAssembler(BufferedStackable):
 				return z
 
 	def process_output(self, data):
-		packedMsg  = pack((str('!%ds') % len(data)), data)
+		packedMsg  = pack((str('!%ds' % len(data))), data)
 		packedHdr1 = pack(str('!4B'), self.sndhdr[0],
 		                  		 self.sndhdr[1],
 		                  		 self.sndhdr[2],
