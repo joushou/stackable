@@ -54,10 +54,14 @@ class StackablePrinter(Stackable):
 		return data
 
 class StackablePoker(Stackable):
-	def __init__(self):
+	def __init__(self, interval=20, send=True, ping_string='__stack_ping', pong_string='__stack_pong'):
 		super(StackablePoker, self).__init__()
+		self.ping_string = ping_string.encode('utf-8')
+		self.pong_string = pong_string.encode('utf-8')
 		self.w = Event()
-		self.reset()
+		self.interval = interval
+		if self.send:
+			self.reset()
 
 	def _detach(self):
 		super(StackablePoker, self)._detach()
@@ -66,27 +70,27 @@ class StackablePoker(Stackable):
 	def reset(self):
 		self.timestamp = datetime.now()
 		def ping():
-			self.w.wait(20)
-			if self.w.isSet():
-				del self.w
-				return
-			self._feed(('__stack_ping').encode('utf-8'))
+			self.w.wait(self.interval)
+			try:
+				self._feed(self.ping_string)
+			except:
+				pass
 		x = Thread(target=ping)
 		x.daemon = True
 		x.start()
 
 	def process_output(self, data):
-		if (datetime.now() - self.timestamp) > timedelta(seconds=30):
+		if self.send and (datetime.now() - self.timestamp) > timedelta(seconds=30):
 			raise StackableError('Pong not received')
 		return data
 
 	def process_input(self, data):
-		if data == '__stack_pong':
+		if data == self.pong_string:
 			self.reset()
 			return None
-		elif data == '__stack_ping':
-			self._feed(('__stack_pong').encode('utf-8'))
+		elif data == self.ping_string:
+			self._feed(self.pong_string)
 			return None
-		elif (datetime.now() - self.timestamp) > timedelta(seconds=30):
+		elif self.send and (datetime.now() - self.timestamp) > timedelta(seconds=30):
 			raise StackableError('Pong not received')
 		return data
