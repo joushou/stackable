@@ -17,6 +17,7 @@ class StackableSocket(Stackable):
 				self.socket = sock
 			else:
 				self.socket = socket(AF_INET, SOCK_STREAM)
+				self.socket.settimeout(10)
 			self.socket.settimeout(None)
 			if None not in (ip, port):
 				self.socket.connect((ip, port))
