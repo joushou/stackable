@@ -4,13 +4,13 @@
 
 from __future__ import print_function, absolute_import, unicode_literals, division
 from stackable.stackable import Stackable, BufferedStackable, StackableError
-from socket import socket, error, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_KEEPALIVE, SOL_TCP, TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT
+from socket import socket, error, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_KEEPALIVE
 from struct import pack, unpack
 from errno import EAGAIN
 
 class StackableSocket(Stackable):
 	'Stackable socket wrapper'
-	def __init__(self, sock=None, ip=None, port=None, timeout=None):
+	def __init__(self, sock=None, ip=None, port=None, timeout=None, keepalive=True):
 		super(StackableSocket, self).__init__()
 		try:
 			if sock != None:
@@ -18,11 +18,9 @@ class StackableSocket(Stackable):
 			else:
 				self.socket = socket(AF_INET, SOCK_STREAM)
 
-			self.socket.setsockopt(SOL_SOCKET, SO_KEEPALIVE, 1)
-			self.socket.setsockopt(SOL_TCP, TCP_KEEPIDLE, 600) # Idle time before sending keep-alive
-			self.socket.setsockopt(SOL_TCP, TCP_KEEPINTVL, 300) # Interval between keepalives
-			self.socket.setsockopt(SOL_TCP, TCP_KEEPCNT, 5)
-			
+			if keepalive:
+				self.socket.setsockopt(SOL_SOCKET, SO_KEEPALIVE, 1)
+
 			self.socket.settimeout(timeout)
 			if None not in (ip, port):
 				self.socket.connect((ip, port))
