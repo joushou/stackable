@@ -20,7 +20,10 @@ class StackablePickler(Stackable):
 class StackableJSON(Stackable):
 	'JSON codec'
 	def process_input(self, data):
-		return json.loads(data)
+		try:
+			return json.loads(data)
+		except ValueError:
+			return None
 
 	def process_output(self, data):
 		return json.dumps(data)
@@ -51,6 +54,15 @@ class StackablePrinter(Stackable):
 
 	def process_output(self, data):
 		self.printer(data)
+		return data
+
+import sys
+class StackableStdout(Stackable):
+	def process_input(self, data):
+		sys.stdout.write(data)
+		return data
+
+	def process_output(self, data):
 		return data
 
 from collections import deque
