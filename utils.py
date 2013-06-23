@@ -29,13 +29,17 @@ class StackableWriter(Stackable):
 	'Reads and writes from/to a file'
 	def __init__(self, filename):
 		super(StackableWriter, self).__init__()
-		self.fd = open(filename, "r+")
+		self.fd = open(filename, "w")
 
-	def processInput(self, data):
+	def process_input(self, data):
 		self.fd.write(data)
+		self.fd.flush()
 
-	def poll(self):
-		return self.fd.read()
+	def process_output(self, data):
+		return data
+
+	# def poll(self):
+	# 	return self.fd.read()
 
 class StackablePrinter(Stackable):
 	'''Prints all input and output, and returns it unmodified.
