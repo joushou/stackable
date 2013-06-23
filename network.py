@@ -120,7 +120,7 @@ class StackablePacketAssembler(BufferedStackable):
 			return self.process_input(b'')
 
 	def process_output(self, data):
-		packedMsg  = pack(b'!%ds' % len(data), data)
+		packedMsg = bytearray(data)
 		packedHdr1 = pack(b'!4B', self.sndhdr[0],
 		                  		 self.sndhdr[1],
 		                  		 self.sndhdr[2],
