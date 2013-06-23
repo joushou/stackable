@@ -47,7 +47,7 @@ If no index is provided, it will be put at the end of the stack.'''
 
 		self.stack.insert(index, stobj)
 		self.stacklen = len(self.stack)
-		stobj._attach(self._feed)
+		stobj._attach(self)
 
 	def detach(self, stobj):
 		'Detach a stackable.'
@@ -96,7 +96,6 @@ Used by Stackables that propagate data as part of initialization.'''
 				if a == None: break
 			else:
 				return a
-
 
 	def poll(self, offset=0, invert=False):
 		'Poll the stack for input.'

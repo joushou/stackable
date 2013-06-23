@@ -33,8 +33,8 @@ continue propagation through the containing Stack.'''
 		'Internal feeding function for output.'
 		return self.process_output(data)
 
-	def _attach(self, feed):
-		self._feed = lambda x: feed(self, x)
+	def _attach(self, stack):
+		self._feed = lambda x: stack._feed(self, x)
 
 	def _detach(self):
 		del self._feed
