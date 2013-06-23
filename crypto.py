@@ -3,7 +3,25 @@
 #
 
 from __future__ import print_function, absolute_import, unicode_literals, division
-from stackable.stackable import Stackable
+from stackable.stackable import Stackable, BufferedStackable
+from crypto.rabbit import Rabbit
+
+class StackableRabbit(Stackable):
+	def __init__(self, key, iv):
+		super(StackableRabbit, self).__init__()
+		self.rabbit = Rabbit()
+		self.rabbit.keysetup(key)
+		self.rabbit.ivsetup(iv)
+		self.rabbit.savestate()
+		self.iv = iv
+
+	def process_input(self, data):
+		self.rabbit.restorestate()
+		return bytes(self.rabbit.encrypt(bytearray(data)))
+
+	def process_output(self, data):
+		self.rabbit.restorestate()
+		return bytes(self.rabbit.encrypt(bytearray(data)))
 
 class StackableARC4(Stackable):
 	def __init__(self, key='Key', state_size = 256):
